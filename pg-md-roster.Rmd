@@ -496,7 +496,7 @@ current_year_month <- paste0(current_year,"-",current_month)
 
 ```{r Data Import, echo = FALSE, warning = FALSE, message = FALSE}
 
-pg_roster <- read_excel("~/press-ganey-md-roster/pg-roster/Press Ganey Roster_100325.xlsx")
+pg_roster <- read_excel("Press Ganey Roster_100325.xlsx")
 
 
 pg_roster_processed <- pg_roster %>%
