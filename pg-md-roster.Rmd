@@ -630,6 +630,7 @@ prov_type_inc <- c(
 prov_list <- access_raw_tbl %>%
   left_join(clarity_ser_tbl %>% select(PROV_ID, PROV_TYPE, PROV_NAME)) %>%
   left_join(clarity_ser_2_tbl %>% select(PROV_ID, NPI)) %>%
+  filter(PROV_TYPE %in% prov_type_inc) %>%
   filter(!(SITE %in% c("MSHP", "MS NOW", "OTHER"))) %>%
   filter(!(DEPT_SPECIALTY_NAME %in% exc_specialty)) %>%
   filter(DERIVED_STATUS_DESC == "Arrived") %>%
