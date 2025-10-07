@@ -830,11 +830,12 @@ knitr::include_graphics("Mount_Sinai_Logo_H.png")
 *Report run date: `r report_run_date`*<br/><br/>
 <p style="font-size:12pt; font-style:italic">PG Status/ Updates Required Definitions:</p>
 <ul style="font-size:12pt; font-style:italic">
-  <li>Activation Required: Department/ Provider has >10 visits in the last 3 months & currently not activated in PG</li>
-  <li>No Activation Required: Department/ Provider has <10 visits in the last 3 months & currently not activated in PG</li>
-  <li>Active: Department/ Provider is currently activated in PG</li>
+  <li>Activation Required: Department/ Provider has >10 visits in the last 3 months & currently not active in PG</li>
+  <li>Deactivation Required: Department/ Provider has >0 visits in the last 12 months & currently active in PG/li>
+  <li>No Activation Required: Department/ Provider has <10 visits in the last 3 months & currently not active in PG</li>
+  <li>Active: Department/ Provider is currently active in PG</li>
 </ul>
-
+<p style="font-size:12pt; font-style:italic">Provider Type in Scope: `r prov_type_inc`</p>
 
 <!-- *Activation Required: Department/ Provider has >10 visits in the last 3 months & currently not activated in PG*<br/> -->
 <!-- *No Activation Required: Department/ Provider has <10 visits in the last 3 months & currently not activated in PG*<br/> -->
