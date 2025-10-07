@@ -1,0 +1,1262 @@
+---
+output:
+  html_document
+---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
+```
+<style type="text/css">
+div.main-container {
+  max-width: 2000px;
+  margin-left: 0;
+  margin-right: auto;
+}
+</style>
+<style>
+.tocify {
+color: black;
+}
+<!-- } -->
+<!-- .tocify .tocify-header { -->
+<!--     position: fixed; -->
+<!--     <!-- top: 50px; --> -->
+<!--     left: 50px; -->
+<!--     width: 350px; -->
+<!--     <!-- border: solid 3px black; --> -->
+<!--     <!-- height: 200px; --> -->
+<!--  border: none; -->
+<!-- } -->
+.tocify .tocify-header .active {
+color: white;
+background: #d80b8c;
+font-weight: bold;
+}
+<!-- .tocify .tocify-item { -->
+<!-- background: white; -->
+<!-- color: black; -->
+<!--  border: none; -->
+<!-- } -->
+</style>
+<style>
+  .nav-pills>li>a:hover, .nav-pills>li>a:focus, .nav-pills>li.active>a,     .nav-pills>li.active>a:hover, .nav-pills>li.active>a:focus{
+     background-color: #212070;
+     }
+</style>
+<style>
+.container { width: 1800px; }
+h2 {
+  background-color: #dddedd;
+  color: black;
+  text-indent: 20px;
+  <!-- font-weight: bold; -->
+}
+h3 {
+  background-color: #f2f2f2;
+  color: black;
+  text-indent: 20px;
+  <!-- font-weight: bold; -->
+}
+h4 {
+  <!-- background-color: #dddedd; -->
+  <!-- color: black; -->
+  text-indent: 50px;
+  <!-- font-weight: bold; -->
+}
+</style>
+<style>
+.blackbox {
+  padding: 1em;
+  background: white;
+  color: black;
+  border: 2px solid #7f7f7f;
+  width: 100%;
+  position: center;
+  align: center;
+  margin: 0px auto;
+}
+.center {
+  text-align: left;
+  margin: 0px auto;
+}
+</style>
+<!-- ```{css toc-content, echo = FALSE} -->
+<!-- #TOC { -->
+<!--   right: 270px; -->
+<!--   margin: 20px 0px 25px 0px; -->
+<!-- } -->
+<!-- .main-container { -->
+<!--     margin-left: 200px; -->
+<!-- } -->
+<!-- ``` -->
+```{r Load Packages, echo = FALSE, warning = FALSE, message = FALSE}
+
+# # Load packages -----------------------------------------------------------------------------------
+suppressMessages({
+  memory.limit(size = 8000000)
+  library(readxl)
+  library(writexl)
+  library(plyr)
+  library(dplyr)
+  library(data.table)
+  library(zoo)
+  library(shiny)
+  library(shinydashboard)
+  library(shinydashboardPlus)
+  library(shinyWidgets)
+  library(htmlwidgets)
+  library(lubridate)
+  library(tcltk)
+  library(tidyverse)
+  library(plotly)
+  library(knitr)
+  library(kableExtra)
+  library(leaflet)
+  library(grid)
+  library(gridExtra)
+  library(eeptools)
+  library(ggQC)
+  library(zipcodeR)
+  library(utils)
+  library(scales)
+  library(chron)
+  library(bupaR)
+  library(shiny)
+  library(DT)
+  library(DiagrammeR)
+  library(shinyalert)
+  library(edeaR)
+  library(processmapR)
+  library(processmonitR)
+  library(processanimateR)
+  library(tidyr)
+  library(lubridate)
+  library(RColorBrewer)
+  library(DiagrammeR)
+  library(ggplot2)
+  library(leaflet)
+  library(readr)
+  library(highcharter)
+  library(ggforce) # for 'geom_arc_bar'
+  library(packcircles) # for packed circle graph
+  library(viridis)
+  library(ggiraph)
+  library(treemapify)
+  library(treemap)
+  library(broom)
+  library(extrafont)
+  library(tis) # for US holidays
+  library(vroom)
+  library(sjmisc)
+  library(tools)
+  library(here)
+  library(shinyBS)
+  library(shinyscreenshot)
+  library(fasttime)
+  library(shinycssloaders)
+  library(feather)
+  # library(zipcodeR)
+  library(formattable)
+  library(shinyjs)
+  library(janitor)
+  library(patchwork)
+  library(flexdashboard)
+  # library(tidyverse)
+  # library(viridis)
+  # library(hrbrthemes)
+  # library(plotly)
+  # install.packages("bsts")
+  library(bsts)
+  library(reactable)
+  # install.packages("reactablefmtr")
+  library(reactablefmtr)
+  library(svDialogs)
+  # library(openxlsx)
+  library(flextable)
+  library(officedown)
+  library(officer)
+  library(magrittr)
+  library(webshot) 
+  library(png)
+  library(ggh4x)
+  library(RODBC)
+  library(DBI)
+  library(odbc)
+  library(dbplyr)
+  library(pool)
+  library(emojifont)
+  library(lubridate)
+})
+
+# devtools::install_github("hafen/lazyrmd")
+# require(lazyrmd)
+# 
+# options(repos = c(tessera = "http://packages.tessera.io",
+#   getOption("repos")))
+# install.packages("lazyrmd")
+# require(lazyrmd)
+
+```
+
+
+```{r Graph asthetics, echo = FALSE, warning = FALSE, message = FALSE}
+### Color Functions for Graphs ============================================================
+
+# Mount Sinai corporate colors "USE THIS TO ADD COLORS"
+MountSinai_colors <- c(
+  `dark purple`  = "#212070",
+  `dark pink`    = "#d80b8c",
+  `dark blue`    = "#00aeef",
+  `dark grey`    = "#7f7f7f",
+  `yellow`       = "#ffc000",
+  `purple`       = "#7030a0",
+  `med purple`   = "#5753d0",
+  `med pink`     = "#f75dbe",
+  `med blue`     = "#5cd3ff",
+  `med grey`     = "#a5a7a5",
+  `light purple` = "#c7c6ef",
+  `light pink`   = "#fcc9e9",
+  `light blue`   = "#c9f0ff",
+  `light grey`   = "#dddedd"
+  )
+
+# Function to extract Mount Sinai colors as hex codes
+# Use Character names of MountSinai_colors
+
+MountSinai_cols <- function(...) {
+  cols <- c(...)
+  
+  if (is.null(cols))
+    return (MountSinai_colors)
+  
+  MountSinai_colors[cols]
+}
+
+# Color Function that can be used to call all colors is "MountSinai_cols()"
+# Use in ggplot 
+
+  #MountSinai_cols()       # will provide all colors and their hex codes in a table 
+  #MountSinai_cols("pink") # will provide color name and the hex code for the pink color
+
+# Create palettes 
+MountSinai_palettes <- list(
+  `all`   = MountSinai_cols("dark purple","dark pink","dark blue","dark grey",
+                            "med purple","med pink","med blue","med grey", 
+                            "light purple","light pink","light blue","light grey"),
+  
+  `main`  = MountSinai_cols("dark purple","dark pink","dark blue","dark grey"),
+  
+  `purple`  = MountSinai_cols("dark purple","med purple","light purple"),
+  
+  `pink`  = MountSinai_cols("dark pink","med pink","light pink"),
+  
+  `blue`  = MountSinai_cols("dark blue", "med blue", "light blue"),
+  
+  `grey`  = MountSinai_cols("dark grey", "med grey", "light grey"),
+  
+  `purpleGrey` = MountSinai_cols("dark purple", "dark grey"),
+  
+  `pinkBlue` = MountSinai_cols("dark pink", "dark blue")
+  
+)
+
+# MountSinai_palettes
+# Return function to interpolate a Mount Sinai color palette
+# default value is the main palette, reverse = True will change the order
+
+MountSinai_pal <- function(palette = "all", reverse = FALSE, ...) {
+  pal <- MountSinai_palettes[[palette]]
+  
+  if (reverse) pal <- rev(pal)
+  
+  colorRampPalette(pal, ...)
+}
+
+
+
+# Scale Function for ggplot can be used instead of scale_color_manual
+scale_color_MountSinai <- function(palette = "all", discrete = TRUE, reverse = FALSE, ...) {
+  pal <- MountSinai_pal(palette = palette, reverse = reverse)
+  
+  if (discrete) {
+    discrete_scale("colour", paste0("MountSinai_", palette), palette = pal, ...)
+  } else {
+    scale_color_gradientn(colours = pal(256), ...)
+  }
+}
+
+# Scale Fill for ggplot insetead of scale_fill_manual 
+scale_fill_MountSinai <- function(palette = "all", discrete = TRUE, reverse = FALSE, ...) {
+  pal <- MountSinai_pal(palette = palette, reverse = reverse)
+
+  if (discrete) {
+    discrete_scale("fill", paste0("MountSinai_", palette), palette = pal, ...)
+  } else {
+    scale_fill_gradientn(colours = pal(256), ...)
+  }
+}
+
+# Use in ggplot 
+  # scale_color_MountSinai("main")
+
+```
+
+
+```{r Data Connections, echo = FALSE, warning = FALSE, message = FALSE}
+
+# Connection to Oracle DB ------------------------------------------------------
+conn1 <- dbPool(drv = odbc(), dsn = "OAO Cloud DB SoYoun", timeout = 30)
+conn3 <- dbPool(drv = odbc(), dsn = "OAO Cloud DB Production", timeout = 30)
+conn2 <- dbConnect(odbc(), 
+                  "Clarity_prod", 
+                  uid = "kweons01" , 
+                  pwd = "kweons01123$")
+conn4 <- dbPool(drv = odbc(), dsn = "OAO Cloud DB Staging", timeout = 30)
+
+conn5 <- dbConnect(odbc(),
+                    Driver = "SQLServer",
+                    # Server = "10.2.42.69", # old server
+                    Server = "datahub-synapse.sql.azuresynapse.net",
+                    database = "datahub_epic_dw",
+                    UID = "MSS_USER",
+                    PWD = "Apple_Bees456$",
+                    Port = 1433)
+
+
+
+# Clarity Connection  ------------------------------------------------
+access_raw_tbl <- tbl(conn2, "MV_DM_PATIENT_ACCESS")
+
+
+clarity_ser_tbl <- tbl(conn2, "CLARITY_SER")
+clarity_ser_2_tbl <- tbl(conn2, "CLARITY_SER_2")
+
+
+```
+
+
+
+```{r Global Functions, echo = FALSE, warning = FALSE, message = FALSE}
+
+'%!in%' <- function(x,y)!('%in%'(x,y)) # Does not include
+not_all_na <- function(x) all(!is.na(x)) # Exclude columns with All NAs
+
+```
+
+
+```{r Report Variables, echo = FALSE, warning = FALSE, message = FALSE}
+
+report_run_date <- format(Sys.Date(), "%Y-%m-%d")
+date_start <- format(Sys.Date() +1, "%Y-%m-%d")
+
+date_start_next30 <- format(Sys.Date() + 30, "%Y-%m-%d")
+date_start_next90 <- format(Sys.Date() + 90, "%Y-%m-%d")
+
+date_start_last30 <- format(Sys.Date() - 30, "%Y-%m-%d")
+date_start_last90 <- format(Sys.Date() - 90, "%Y-%m-%d")
+
+date_start_last4mo <- format(floor_date(Sys.Date(), unit = "month") - months(3), "%Y-%m-%d")
+date_start_last12mo <- format(floor_date(Sys.Date(), unit = "month") - months(12), "%Y-%m-%d")
+
+current_year <- format(Sys.Date(), "%Y")
+prior_year <- as.character(as.numeric(current_year) -1)
+
+current_month <- format(Sys.Date(), "%m")
+current_year_month <- paste0(current_year,"-",current_month)
+
+
+```
+
+
+<!-- ```{r Import Latest PG MD Roster, echo = FALSE, warning = FALSE, message = FALSE} -->
+
+<!-- # Load necessary libraries -->
+<!-- library(readxl) -->
+<!-- library(purrr) -->
+<!-- library(dplyr) -->
+
+<!-- # Define the folder where your Excel files are -->
+<!-- folder_path <- "~/press-ganey-md-roster" -->
+
+<!-- # Define the sheet you want to read (can be name or number) -->
+<!-- sheet_to_read <- "Provider Info"  # Or use a number like 1 -->
+
+<!-- # Get a list of Excel files in the folder -->
+<!-- excel_files <- list.files(path = folder_path, pattern = "\\.xls$", full.names = TRUE, recursive = TRUE) -->
+
+<!-- # Read the specified sheet from each file and combine -->
+<!-- pg_data <- map_dfr(excel_files, function(file) { -->
+<!--   tryCatch({ -->
+<!--     read_excel(file, sheet = sheet_to_read) %>% -->
+<!--       mutate(SourceFile = basename(file))  # Optionally keep track of file name -->
+<!--   }, error = function(e) { -->
+<!--     warning(paste("Failed to read", file, ":", e$message)) -->
+<!--     NULL -->
+<!--   }) -->
+<!-- }) -->
+
+
+<!-- ``` -->
+
+
+
+<!-- ```{r Process Imported PG MD Roster, echo = FALSE, warning = FALSE, message = FALSE} -->
+
+<!-- # PG Client ID Key -->
+<!-- pg_client_id <- data.frame( -->
+<!--   site = c("MSH_A28", "NYEE", "MSBI", "MSM_A28", "MSW_A28", "MSW_MSM_FPA", "MSH_FPA", "MSQ", "Network", "Visiting_Docs"), -->
+<!--   client_id = c(489, 764, 3674, 3675, 4474, 7816, 9232, 12995, 21669, 31465) -->
+<!-- ) -->
+
+
+<!-- # Extract Client ID from File Name  -->
+<!-- pg_data_processed <- pg_data %>% -->
+<!--   mutate(client_id = str_extract(SourceFile, "(?<=MDExport_)\\d+")) %>% -->
+<!--   left_join(pg_client_id %>% -->
+<!--               mutate(client_id = as.character(client_id))) %>% -->
+<!--   mutate(closed = ifelse(str_detect(`Provider Name`, "(CLOSED)"), 1, 0), -->
+<!--          closed_Yn = ifelse(str_detect(`Provider Name`, "(CLOSED)"), "Y", "N"))  -->
+
+
+<!-- pg_data_summary <- pg_data_processed %>% -->
+<!--   mutate(site_client_id = paste0(site, " (",client_id,")")) %>% -->
+<!--   mutate(pg_status = ifelse(closed_Yn == "Y", "Closed", "Active")) %>% -->
+<!--   dplyr::select(`Provider Code`, `Provider Name`, `Type Description`, site_client_id, pg_status) %>% -->
+<!--   distinct() %>% -->
+<!--   pivot_wider(names_from = site_client_id, -->
+<!--               values_from = pg_status) -->
+
+
+<!-- ``` -->
+
+
+
+<!-- ```{r Import Latest PG Department Roster, echo = FALSE, warning = FALSE, message = FALSE} -->
+
+<!-- # Load necessary libraries -->
+<!-- library(readxl) -->
+<!-- library(dplyr) -->
+<!-- library(purrr) -->
+
+<!-- # Define the folder where your Excel files are -->
+<!-- folder_path <- "~/press-ganey-md-roster" -->
+
+<!-- # Define the sheet you want to read (can be name or number) -->
+<!-- sheet_to_read <- "Site Info"  # Or a number like 1 -->
+
+<!-- # Define how many rows to skip before reading the actual data -->
+<!-- rows_to_skip <- 8 # This will start reading from row 5 (1-based) -->
+
+<!-- # Get a list of Excel files in the folder -->
+<!-- excel_files <- list.files(path = folder_path, pattern = "\\.xls$", full.names = TRUE, recursive = TRUE) -->
+
+<!-- # Read the specified sheet from each file and combine -->
+<!-- pg_data_site <- map_dfr(excel_files, function(file) { -->
+<!--   tryCatch({ -->
+<!--     read_excel(file, sheet = sheet_to_read, skip = rows_to_skip) %>% -->
+<!--       mutate(SourceFile = basename(file))  # Optionally keep track of file name -->
+<!--   }, error = function(e) { -->
+<!--     warning(paste("Failed to read", file, ":", e$message)) -->
+<!--     NULL -->
+<!--   }) -->
+<!-- }) -->
+
+
+
+<!-- ``` -->
+
+
+<!-- ```{r Process Imported PG Department Roster, echo = FALSE, warning = FALSE, message = FALSE} -->
+
+
+
+<!-- pg_data_site_processed <- pg_data_site %>% -->
+<!--   separate_rows(`Site Code`, sep = ",") %>% -->
+<!--   mutate(`Site Code` = trimws(`Site Code`)) -->
+
+
+<!-- # Extract Client ID from File Name  -->
+<!-- pg_data_site_processed <- pg_data_site_processed %>% -->
+<!--   mutate(client_id = str_extract(SourceFile, "(?<=MDExport_)\\d+")) %>% -->
+<!--   left_join(pg_client_id %>% -->
+<!--               mutate(client_id = as.character(client_id))) %>% -->
+<!--   mutate(closed = ifelse(str_detect(`Site Name`, "(CLOSED)"), 1, 0), -->
+<!--          closed_Yn = ifelse(str_detect(`Site Name`, "(CLOSED)"), "Y", "N"))  -->
+
+
+<!-- pg_data_summary <- pg_data_processed %>% -->
+<!--   mutate(site_client_id = paste0(site, " (",client_id,")")) %>% -->
+<!--   mutate(pg_status = ifelse(closed_Yn == "Y", "Closed", "Active")) %>% -->
+<!--   dplyr::select(`Provider Code`, `Provider Name`, `Type Description`, site_client_id, pg_status) %>% -->
+<!--   distinct() %>% -->
+<!--   pivot_wider(names_from = site_client_id, -->
+<!--               values_from = pg_status) -->
+<!-- ``` -->
+
+
+
+```{r Data Import, echo = FALSE, warning = FALSE, message = FALSE}
+
+pg_roster <- read_excel("~/press-ganey-md-roster/pg-roster/Press Ganey Roster_100325.xlsx")
+
+
+pg_roster_processed <- pg_roster %>%
+  mutate(NPI = trimws(gsub("'", "", `IT NPI`)),
+         CLINIC_ID = as.numeric(trimws(gsub("'", "", `IT CLINICID`)))) %>%
+  mutate(pg_active = 1)
+
+
+```
+
+
+```{r Process Imported PG MD Roster, echo = FALSE, warning = FALSE, message = FALSE}
+
+# # PG Client ID Key
+# pg_client_id <- data.frame(
+#   site = c("MSH_A28", "NYEE", "MSBI", "MSM_A28", "MSW_A28", "MSW_MSM_FPA", "MSH_FPA", "MSQ", "Network", "Visiting_Docs"),
+#   client_id = c(489, 764, 3674, 3675, 4474, 7816, 9232, 12995, 21669, 31465)
+# )
+# 
+# 
+# # Extract Client ID from File Name 
+# pg_data_processed <- pg_data %>%
+#   mutate(client_id = str_extract(SourceFile, "(?<=MDExport_)\\d+")) %>%
+#   left_join(pg_client_id %>%
+#               mutate(client_id = as.character(client_id))) %>%
+#   mutate(closed = ifelse(str_detect(`Provider Name`, "(CLOSED)"), 1, 0),
+#          closed_Yn = ifelse(str_detect(`Provider Name`, "(CLOSED)"), "Y", "N")) 
+# 
+# 
+# pg_data_summary <- pg_data_processed %>%
+#   mutate(site_client_id = paste0(site, " (",client_id,")")) %>%
+#   mutate(pg_status = ifelse(closed_Yn == "Y", "Closed", "Active")) %>%
+#   dplyr::select(`Provider Code`, `Provider Name`, `Type Description`, site_client_id, pg_status) %>%
+#   distinct() %>%
+#   pivot_wider(names_from = site_client_id,
+#               values_from = pg_status)
+  
+ 
+```
+
+
+```{r Specialty Inclusion Criteira, echo = FALSE, warning = FALSE, message = FALSE}
+
+exc_specialty <- c("Radiology", "Vascular and Interventional Radiology",  "Radiation Oncology", 
+                   "Social Services", 
+                   "Oncology", "Psychiatry", "Psych Shared", "Behavioral Health",
+                   "Urgent Care", "Testing")
+
+exc_dep <- c("SOCIAL WORK", "DIALYSIS", "LAB", 
+             "INFUSION", "HEM ONC", "MED ONC", "SURG ONC",
+             "VIRTUAL",
+             "ECHO", "VASC PROC", "NUCLEAR", "VEIN")
+
+```
+
+
+```{r Provider Type Inclusion Criteria, echo = FALSE, warning = FALSE, message = FALSE}
+
+prov_type_inc <- c(
+                   "Acupuncturist",
+                   "Administrative Assistant",
+                   "Ancillary Student",
+                   "Anesthesiologist",
+                   "Audiologist",
+                   "Care Coordinator",
+                   "Care Manager",
+                   "Chaplain",
+                   "Clinical Program Coordinator",
+                   "Coordinator",
+                   "Counselor",
+                   "Dentist",
+                   "EKG Tech",
+                   "Exercise Physiologist",
+                   "Fellow",
+                   "Genetic Counselor",
+                   "Health Educator",
+                   "Interpreter",
+                   "Licensed Massage Therapist",
+                   "Licensed Mental Health Counselor",
+                   "Licensed Nurse",
+                   "Licensed Practical Nurse",
+                   "Licensed Substance Abuse Counselor",
+                   "Medical Assistant",
+                   "Medical Student",
+                   "Midwife",
+                   "Nurse Anesthetist",
+                   "Nurse Practitioner",
+                   "Nutritionist",
+                   "Occupational Therapist",
+                   "Occupational Therapy Assistant",
+                   "Optometrist",
+                   "Osteopath",
+                   "Perfusionist",
+                   "Pharmacist",
+                   "Phlebotomist",
+                   "Physical Therapist",
+                   "Physical Therapist Assistant",
+                   "Physician",
+                   "Physician Assistant",
+                   "Psych Interns",
+                   "Psych Nurse Practitioner",
+                   "Psychiatric Rehabilitation Therapist",
+                   "Psychologist",
+                   "Psychology Extern",
+                   "Radiologist",
+                   "Radiology Tech",
+                   "Recreational Therapist",
+                   "Registered Nurse",
+                   "Rehab Neuro Psychologist",
+                   "Research Coordinator",
+                   "Resident",
+                   "Resource",
+                   "Respiratory Therapist",
+                   "Social Worker",
+                   "Social Worker Assistant",
+                   "Social Worker Intern",
+                   "Speech Language Pathologist",
+                   "Speech Therapist",
+                   "Technician",
+                   "Therapist",
+                   "Unit Clerk"
+                   )
+
+```
+
+
+```{r Status by Provider Processing, echo = FALSE, warning = FALSE, message = FALSE}
+
+
+
+prov_list <- access_raw_tbl %>%
+  left_join(clarity_ser_tbl %>% select(PROV_ID, PROV_TYPE, PROV_NAME)) %>%
+  left_join(clarity_ser_2_tbl %>% select(PROV_ID, NPI)) %>%
+  filter(!(SITE %in% c("MSHP", "MS NOW", "OTHER"))) %>%
+  filter(!(DEPT_SPECIALTY_NAME %in% exc_specialty)) %>%
+  filter(DERIVED_STATUS_DESC == "Arrived") %>%
+  mutate(site_classification = case_when(DEPARTMENT_NAME %LIKE% "%VISITING DOC%" ~ "VISITING_DOCS",
+                                         (SITE %in% c("MSW", "MSM") & DEP_RPT_GRP_ELEVEN == "PB ONLY") ~ "MSW_MSM_FPA",
+                                         (SITE %in% c("MSW", "MSM") & DEP_RPT_GRP_ELEVEN != "PB ONLY") ~ "MSW_MSM_A28",
+                                         (SITE %in% c("MSBI", "MSUS", "MSDMG", "MSB")) ~ "MSBI",
+                                         TRUE ~ SITE)) %>%
+  dplyr::select(site_classification, SITE,  DEPARTMENT_ID, DEPARTMENT_NAME, DEP_RPT_GRP_ELEVEN, PROV_ID, NPI, PROV_NAME, PROV_TYPE) %>%
+  distinct() %>%
+  collect() 
+
+prov_list <- prov_list %>%
+  filter(!str_detect(DEPARTMENT_NAME, paste(exc_dep, collapse = "|"))) 
+  
+
+  
+
+past_volume_12mo <- access_raw_tbl %>%
+  filter(DERIVED_STATUS_DESC == "Arrived") %>%
+  filter(APPT_DTTM >= sql(paste0("TO_DATE('", date_start_last12mo, "', 'YYYY-MM-DD HH24:MI:SS')"))) %>%
+  filter(APPT_DTTM < sql(paste0("TO_DATE('", report_run_date, "', 'YYYY-MM-DD HH24:MI:SS')"))) %>%
+  group_by(DEPARTMENT_ID, DEPARTMENT_NAME, DEP_RPT_GRP_ELEVEN, PROV_ID) %>%
+  summarise(volume_last12mo = n_distinct(PAT_ENC_CSN_ID)) 
+
+past_volume_4mo <- access_raw_tbl %>%
+  filter(DERIVED_STATUS_DESC == "Arrived") %>%
+  filter(APPT_DTTM >= sql(paste0("TO_DATE('", date_start_last4mo, "', 'YYYY-MM-DD HH24:MI:SS')"))) %>%
+  filter(APPT_DTTM < sql(paste0("TO_DATE('", report_run_date, "', 'YYYY-MM-DD HH24:MI:SS')"))) %>%
+  group_by(DEPARTMENT_ID, DEPARTMENT_NAME, DEP_RPT_GRP_ELEVEN, PROV_ID) %>%
+  summarise(volume_last4mo = n_distinct(PAT_ENC_CSN_ID)) 
+
+past_volume <- past_volume_12mo %>%
+  full_join(past_volume_4mo, by = c("DEPARTMENT_ID", "DEPARTMENT_NAME", "DEP_RPT_GRP_ELEVEN", "PROV_ID")) %>%
+  collect()
+
+
+  
+scheduling_data <- access_raw_tbl %>%
+  filter(DERIVED_STATUS_DESC == "Arrived") %>%
+  filter(APPT_DTTM < TO_DATE(report_run_date, "YYYY-MM-DD HH24:MI:SS")) %>%
+  filter(APPT_DTTM >= TO_DATE(date_start_last4mo, "YYYY-MM-DD HH24:MI:SS")) %>%
+  mutate(appt_year = year(CONTACT_DATE),
+         appt_month = month(CONTACT_DATE)) %>%
+  group_by(DEPARTMENT_ID, DEPARTMENT_NAME, DEP_RPT_GRP_ELEVEN, PROV_ID, appt_year, appt_month) %>%
+  summarise(total = n()) %>%
+  collect() 
+
+
+scheduling_data2 <- scheduling_data %>%
+  filter(!str_detect(DEPARTMENT_NAME, paste(exc_dep, collapse = "|"))) %>%
+   mutate(appt_month = sprintf("%02d", appt_month),
+          appt_year_month = paste0(appt_year, "-", appt_month)) %>%
+  group_by(PROV_ID, DEPARTMENT_ID, DEPARTMENT_NAME, DEP_RPT_GRP_ELEVEN, appt_year_month) %>%
+  summarise(total = sum(total, na.rm = T)) %>%
+  arrange(appt_year_month) %>%
+  pivot_wider(names_from = appt_year_month,
+              values_from = total,
+              values_fill = 0)
+
+
+  
+merged <- prov_list %>%
+  left_join(scheduling_data2) %>%
+  left_join(past_volume) %>%
+  left_join(pg_roster_processed,
+            by = c("NPI" = "NPI",
+                   "DEPARTMENT_ID" = "CLINIC_ID"),
+            na_matches = "never")
+
+
+merged_processed <- merged %>%
+  mutate(volume_last4mo_Yn = case_when(volume_last4mo >= 10 ~ 1, TRUE ~ 0),
+         volume_last12mo_Yn = case_when(volume_last12mo > 0 ~ 1, TRUE ~ 0)) %>%
+  mutate(final_status = case_when(volume_last4mo_Yn == 1 & pg_active == 1 ~ "Active",
+                                  volume_last4mo_Yn == 1 & is.na(pg_active) ~ "Activation Required",
+                                  volume_last12mo_Yn == 0 & pg_active == 1 ~ "Deactivation Required",
+                                  TRUE ~ "No Action Required")) 
+
+merged_processed <- merged_processed %>%
+  distinct() %>%
+  arrange(final_status) %>%
+  mutate(final_status_ct = 1) %>%
+  pivot_wider(names_from = final_status,
+              values_from = final_status_ct) %>%
+  arrange(site_classification, PROV_NAME)
+
+```
+
+
+```{r Status by Department Processing, echo = FALSE, warning = FALSE, message = FALSE}
+  
+
+dept_list <- access_raw_tbl %>%
+  filter(!(SITE %in% c("MSHP", "MS NOW", "OTHER"))) %>%
+  filter(!(DEPT_SPECIALTY_NAME %in% exc_specialty)) %>%
+  filter(DERIVED_STATUS_DESC == "Arrived") %>%
+  mutate(site_classification = case_when(DEPARTMENT_NAME %LIKE% "%VISITING DOC%" ~ "VISITING_DOCS",
+                                         (SITE %in% c("MSW", "MSM") & DEP_RPT_GRP_ELEVEN == "PB ONLY") ~ "MSW_MSM_FPA",
+                                         (SITE %in% c("MSW", "MSM") & DEP_RPT_GRP_ELEVEN != "PB ONLY") ~ "MSW_MSM_A28",
+                                         (SITE %in% c("MSBI", "MSUS", "MSDMG", "MSB")) ~ "MSBI",
+                                         TRUE ~ SITE)) %>%
+  dplyr::select(site_classification, SITE,  DEPARTMENT_ID, DEPARTMENT_NAME, DEP_RPT_GRP_ELEVEN) %>%
+  distinct() %>%
+  collect() 
+
+dept_list <- dept_list %>%
+  filter(!str_detect(DEPARTMENT_NAME, paste(exc_dep, collapse = "|"))) 
+  
+
+  
+
+past_volume_12mo_dept <- access_raw_tbl %>%
+  filter(DERIVED_STATUS_DESC == "Arrived") %>%
+  filter(APPT_DTTM >= sql(paste0("TO_DATE('", date_start_last12mo, "', 'YYYY-MM-DD HH24:MI:SS')"))) %>%
+  filter(APPT_DTTM < sql(paste0("TO_DATE('", report_run_date, "', 'YYYY-MM-DD HH24:MI:SS')"))) %>%
+  group_by(DEPARTMENT_ID, DEPARTMENT_NAME, DEP_RPT_GRP_ELEVEN) %>%
+  summarise(volume_last12mo = n_distinct(PAT_ENC_CSN_ID)) 
+
+past_volume_4mo_dept <- access_raw_tbl %>%
+  filter(DERIVED_STATUS_DESC == "Arrived") %>%
+  filter(APPT_DTTM >= sql(paste0("TO_DATE('", date_start_last4mo, "', 'YYYY-MM-DD HH24:MI:SS')"))) %>%
+  filter(APPT_DTTM < sql(paste0("TO_DATE('", report_run_date, "', 'YYYY-MM-DD HH24:MI:SS')"))) %>%
+  group_by(DEPARTMENT_ID, DEPARTMENT_NAME, DEP_RPT_GRP_ELEVEN) %>%
+  summarise(volume_last4mo = n_distinct(PAT_ENC_CSN_ID)) 
+
+past_volume_dept <- past_volume_12mo_dept %>%
+  full_join(past_volume_4mo_dept, by = c("DEPARTMENT_ID", "DEPARTMENT_NAME", "DEP_RPT_GRP_ELEVEN")) %>%
+  collect()
+
+
+  
+scheduling_data_dept <- access_raw_tbl %>%
+  filter(DERIVED_STATUS_DESC == "Arrived") %>%
+  filter(APPT_DTTM < TO_DATE(report_run_date, "YYYY-MM-DD HH24:MI:SS")) %>%
+  filter(APPT_DTTM >= TO_DATE(date_start_last4mo, "YYYY-MM-DD HH24:MI:SS")) %>%
+  mutate(appt_year = year(CONTACT_DATE),
+         appt_month = month(CONTACT_DATE)) %>%
+  group_by(DEPARTMENT_ID, DEPARTMENT_NAME, DEP_RPT_GRP_ELEVEN, appt_year, appt_month) %>%
+  summarise(total = n()) %>%
+  collect() 
+
+
+
+scheduling_data2_dept <- scheduling_data_dept %>%
+  filter(!str_detect(DEPARTMENT_NAME, paste(exc_dep, collapse = "|"))) %>%
+   mutate(appt_month = sprintf("%02d", appt_month),
+          appt_year_month = paste0(appt_year, "-", appt_month)) %>%
+  group_by(DEPARTMENT_ID, DEPARTMENT_NAME, DEP_RPT_GRP_ELEVEN, appt_year_month) %>%
+  summarise(total = sum(total, na.rm = T)) %>%
+  arrange(appt_year_month) %>%
+  pivot_wider(names_from = appt_year_month,
+              values_from = total,
+              values_fill = 0)
+
+
+volume_months <- tail(colnames(scheduling_data2_dept), 4)
+
+  
+merged_dept <- dept_list %>%
+  left_join(scheduling_data2_dept) %>%
+  left_join(past_volume_dept) %>%
+  left_join(pg_roster_processed %>%
+              dplyr::select(`IT CLINICID`, CLINIC_ID, pg_active) %>%
+              distinct(),
+            by = c("DEPARTMENT_ID" = "CLINIC_ID"),
+            na_matches = "never")
+
+
+merged_processed_dept <- merged_dept %>%
+  mutate(volume_last4mo_Yn = case_when(volume_last4mo >= 10 ~ 1, TRUE ~ 0),
+         volume_last12mo_Yn = case_when(volume_last12mo > 0 ~ 1, TRUE ~ 0)) %>%
+  mutate(final_status = case_when(volume_last4mo_Yn == 1 & pg_active == 1 ~ "Active",
+                                  volume_last4mo_Yn == 1 & is.na(pg_active) ~ "Activation Required",
+                                  volume_last12mo_Yn == 0 & pg_active == 1 ~ "Deactivation Required",
+                                  TRUE ~ "No Action Required")) 
+
+merged_processed_dept <- merged_processed_dept %>%
+  distinct() %>%
+  arrange(final_status) %>%
+  mutate(final_status_ct = 1) %>%
+  pivot_wider(names_from = final_status,
+              values_from = final_status_ct) %>%
+  arrange(site_classification, SITE, DEPARTMENT_NAME)
+
+
+```
+
+
+
+```{r Sinai Logo, echo=FALSE, out.width = '15%'}
+knitr::include_graphics("Mount_Sinai_Logo_H.png")
+```
+
+
+# Press Ganey Activation Status {.tabset .tabset-fade .tabset-pills}
+*Report run date: `r report_run_date`*<br/><br/>
+<p style="font-size:12pt; font-style:italic">PG Status/ Updates Required Definitions:</p>
+<ul style="font-size:12pt; font-style:italic">
+  <li>Activation Required: Department/ Provider has >10 visits in the last 3 months & currently not activated in PG</li>
+  <li>No Activation Required: Department/ Provider has <10 visits in the last 3 months & currently not activated in PG</li>
+  <li>Active: Department/ Provider is currently activated in PG</li>
+</ul>
+
+
+<!-- *Activation Required: Department/ Provider has >10 visits in the last 3 months & currently not activated in PG*<br/> -->
+<!-- *No Activation Required: Department/ Provider has <10 visits in the last 3 months & currently not activated in PG*<br/> -->
+<!-- *Active: Department/ Provider is currently activated in PG*<br/> -->
+______________________________________________________________________________________________________________________________
+<br/>
+<br/>
+
+## Status by Department
+```{r Status by Department Output, echo = FALSE, warning = FALSE, message = FALSE}
+
+
+htmltools::browsable(
+  tagList(
+    tags$button(
+      tagList(fontawesome::fa("download"), "Download Table"),
+      onclick = "Reactable.downloadDataCSV('dept-summary', 'PG Status Updated by Dept')"
+    ),
+
+# htmltools::browsable(
+#   tagList(
+#     div(tags$label("Summary by", `for` = "access-metrics")),
+#     tags$select(
+#       id = "new-pt-waitTime",
+#       onchange = "Reactable.setGroupBy('access-metrics', this.value ? [this.value] : [])",
+#       tags$option("None", value = ""),
+#       lapply(c("Year", "Year-Month", "SITE", "Specialty Type", "Specialty"), tags$option)
+#     ),
+# 
+#     tags$hr("aria-hidden" = "true"),
+#     
+reactable(
+  merged_processed_dept,
+  elementId = "dept-summary",
+  # elementId = "referral-vol-download-table",
+  style = list(fontFamily = 'Calibri',
+                 fontSize = '14px'),
+    defaultColDef = colDef(align = "left",
+                           headerStyle = list(background = "#212070", color = "white", fontWeight = "Bold", fontSize = "14px"),
+                           headerClass = "bar-sort-header"),
+  # RowStyle = function(index) {
+  #           if (index %in% c(nrow(referral_vol_site_data_mshs))) {
+  #             list(`border-top` = "2px solid rgb(184,184,184)",
+  #                  fontWeight = "Bold")
+  #           }
+  #         },
+    highlight = TRUE,
+    # filterable = TRUE,
+    pagination = FALSE,
+    # height = 800,
+    wrap = TRUE,
+  searchable = TRUE,
+
+  groupBy = c("site_classification"),
+
+  columnGroups = list(
+    colGroup(name = "", columns = c("site_classification", "SITE", "DEPARTMENT_ID", "DEPARTMENT_NAME", "DEP_RPT_GRP_ELEVEN"),
+             headerStyle = list(color = "black", fontSize = "16px"),
+             sticky = "left"),
+    colGroup(name = paste0("Visit Volume"),
+             columns = c(volume_months, "volume_last4mo", "volume_last12mo"),
+             headerStyle = list(background = "#212070", color = "white", fontSize = "16px")),
+    colGroup(name = paste0("PG Status Update"),
+             columns = c("Activation Required", "No Action Required", "Active", "Deactivation Required"),
+             headerStyle = list(background = "#d80b8c", color = "white", fontSize = "16px"))
+    ),
+
+  columns = list(
+    
+    site_classification = colDef(
+      name = "Matching PG Client ID",
+      headerStyle = list(background = "white", fontWeight = "Bold", fontSize = "14px"),
+      minWidth = 200),
+    
+    SITE = colDef(
+      name = "EPIC DEP Site",
+      headerStyle = list(background = "white", fontWeight = "Bold", fontSize = "14px"),
+      minWidth = 200),
+    
+    DEPARTMENT_ID = colDef(
+      name = "EPIC DEP ID",
+      headerStyle = list(background = "white", fontWeight = "Bold", fontSize = "14px"),
+      minWidth = 100),
+    
+    DEPARTMENT_NAME = colDef(
+      name = "EPIC DEP Name",
+      headerStyle = list(background = "white", fontWeight = "Bold", fontSize = "14px"),
+      minWidth = 250),
+    
+    DEP_RPT_GRP_ELEVEN = colDef(
+      name = "A28 vs. Non-A28",
+      headerStyle = list(background = "white", fontWeight = "Bold", fontSize = "14px"),
+      minWidth = 150),
+    
+    volume_last4mo = colDef(
+      name = "Last 4 Months"),
+    
+    volume_last12mo = colDef(
+      name = "Last 12 Months"),
+
+    `Activation Required` = colDef(
+      minWidth = 100,
+      headerStyle = list(background = "#d80b8c", color = "white", fontWeight = "Bold", fontSize = "14px"),
+      # Calculate the aggregate conversion rate as `(total-pending) / total`
+      aggregate = 'sum',
+      style = JS("function(rowInfo) {
+        var value = rowInfo.row['Activation Required']
+        if (value >= 1) {
+          var background = '#FFEB9C'
+          var color = 'black'
+        } else if (value < 1) {
+          var background = '#FFFFFF'
+          var color = '#FFFFFF'
+        } else {
+          var background = '#FFFFFF'
+          var color = '#FFFFFF'
+        }
+        return { background: background, color: color, fontFamily: 'calibri', fontWeight: 'bold'}
+      }"),
+      format = colFormat(separators = TRUE, digits = 0)
+    ),
+    
+    `No Action Required` = colDef(
+      minWidth = 100,
+      headerStyle = list(background = "#d80b8c", color = "white", fontWeight = "Bold", fontSize = "14px"),
+      # Calculate the aggregate conversion rate as `(total-pending) / total`
+      aggregate = 'sum',
+      format = colFormat(separators = TRUE, digits = 0)
+      # style = JS("function(rowInfo) {
+      #   var value = rowInfo.row['No Action Required']
+      #   if (value >= 1) {
+      #     var background = '#FFEB9C'
+      #     var color = 'black'
+      #   } else if (value < 1) {
+      #     var background = '#FFFFFF'
+      #     var color = '#FFFFFF'
+      #   } else {
+      #     var background = '#FFFFFF'
+      #     var color = '#FFFFFF'
+      #   }
+      #   return { background: background, color: color, fontFamily: 'calibri', fontWeight: 'bold'}
+      # }")
+    ),
+    
+    `Active` = colDef(
+      minWidth = 100,
+      headerStyle = list(background = "#d80b8c", color = "white", fontWeight = "Bold", fontSize = "14px"),
+      # Calculate the aggregate conversion rate as `(total-pending) / total`
+      aggregate = 'sum',
+      style = JS("function(rowInfo) {
+        var value = rowInfo.row['Active']
+        if (value >= 1) {
+          var background = '#C6EFCE'
+          var color = 'black'
+        } else if (value < 1) {
+          var background = '#FFFFFF'
+          var color = '#FFFFFF'
+        } else {
+          var background = '#FFFFFF'
+          var color = '#FFFFFF'
+        }
+        return { background: background, color: color, fontFamily: 'calibri', fontWeight: 'bold'}
+      }"),
+      format = colFormat(separators = TRUE, digits = 0)
+    ),
+    
+    `Deactivation Required` = colDef(
+      minWidth = 100,
+      headerStyle = list(background = "#d80b8c", color = "white", fontWeight = "Bold", fontSize = "14px"),
+      # Calculate the aggregate conversion rate as `(total-pending) / total`
+      aggregate = 'sum',
+      style = JS("function(rowInfo) {
+        var value = rowInfo.row['Deactivation Required']
+        if (value >= 1) {
+          var background = '#FFC7CE'
+          var color = 'black'
+        } else if (value < 1) {
+          var background = '#FFFFFF'
+          var color = '#FFFFFF'
+        } else {
+          var background = '#FFFFFF'
+          var color = '#FFFFFF'
+        }
+        return { background: background, color: color, fontFamily: 'calibri', fontWeight: 'bold'}
+      }"),
+       format = colFormat(separators = TRUE, digits = 0)
+    ),
+
+
+    sum_last4 = colDef(show =F),
+    scheduling_status = colDef(show =F),
+    Service = colDef(show =F),
+    `IT CLINICID` = colDef(show =F),
+    n = colDef(show =F),
+    pg_active = colDef(show =F),
+    volume_last4mo_Yn = colDef(show =F),
+    volume_last12mo_Yn = colDef(show =F)
+    
+
+  ) # Close Columns
+
+  ) # Close Reactable
+) # Close Taglist
+) # Close htmltools
+
+
+```
+
+## Status by Provider
+```{r Status by Provider Output, echo = FALSE, warning = FALSE, message = FALSE}
+
+
+htmltools::browsable(
+  tagList(
+    tags$button(
+      tagList(fontawesome::fa("download"), "Download Table"),
+      onclick = "Reactable.downloadDataCSV('provider-summary', 'PG Status Update by Provider')"
+    ),
+
+# htmltools::browsable(
+#   tagList(
+#     div(tags$label("Summary by", `for` = "access-metrics")),
+#     tags$select(
+#       id = "new-pt-waitTime",
+#       onchange = "Reactable.setGroupBy('access-metrics', this.value ? [this.value] : [])",
+#       tags$option("None", value = ""),
+#       lapply(c("Year", "Year-Month", "SITE", "Specialty Type", "Specialty"), tags$option)
+#     ),
+# 
+#     tags$hr("aria-hidden" = "true"),
+#     
+reactable(
+  merged_processed %>%
+    filter(!is.na(NPI)),
+  elementId = "provider-summary",
+  # elementId = "referral-vol-download-table",
+  style = list(fontFamily = 'Calibri',
+                 fontSize = '14px'),
+    defaultColDef = colDef(align = "left",
+                           headerStyle = list(background = "#212070", color = "white", fontWeight = "Bold", fontSize = "14px"),
+                           headerClass = "bar-sort-header"),
+  # RowStyle = function(index) {
+  #           if (index %in% c(nrow(referral_vol_site_data_mshs))) {
+  #             list(`border-top` = "2px solid rgb(184,184,184)",
+  #                  fontWeight = "Bold")
+  #           }
+  #         },
+    highlight = TRUE,
+    # filterable = TRUE,
+    pagination = FALSE,
+    # height = 800,
+    wrap = TRUE,
+  searchable = TRUE,
+
+  groupBy = c("site_classification", "PROV_NAME"),
+
+  columnGroups = list(
+    colGroup(name = "", columns = c("site_classification", "PROV_NAME", "PROV_ID", "NPI", "PROV_TYPE", "SITE", "DEPARTMENT_ID", "DEPARTMENT_NAME", "DEP_RPT_GRP_ELEVEN"),
+             headerStyle = list(color = "black", fontSize = "16px"),
+             sticky = "left"),
+    colGroup(name = paste0("Visit Volume"),
+             columns = c(volume_months, "volume_last4mo", "volume_last12mo"),
+             headerStyle = list(background = "#212070", color = "white", fontSize = "16px")),
+    colGroup(name = paste0("PG Status Update"),
+             columns = c("Activation Required", "No Action Required", "Active", "Deactivation Required"),
+             headerStyle = list(background = "#d80b8c", color = "white", fontSize = "16px"))
+    ),
+
+  columns = list(
+    
+    site_classification = colDef(
+      name = "Matching PG Client ID",
+      headerStyle = list(background = "white", fontWeight = "Bold", fontSize = "14px"),
+      minWidth = 200),
+    
+    PROV_NAME = colDef(
+      name = "Name",
+      headerStyle = list(background = "white", fontWeight = "Bold", fontSize = "14px"),
+      minWidth = 250),
+    
+    NPI = colDef(
+      name = "NPI",
+      headerStyle = list(background = "white", fontWeight = "Bold", fontSize = "14px"),
+      minWidth = 100),
+    
+    PROV_TYPE = colDef(
+      name = "Type",
+      headerStyle = list(background = "white", fontWeight = "Bold", fontSize = "14px"),
+      minWidth = 100),
+    
+    SITE = colDef(
+      name = "EPIC DEP Site",
+      headerStyle = list(background = "white", fontWeight = "Bold", fontSize = "14px"),
+      minWidth = 200),
+    
+    DEPARTMENT_ID = colDef(
+      name = "EPIC DEP ID",
+      headerStyle = list(background = "white", fontWeight = "Bold", fontSize = "14px"),
+      minWidth = 100),
+    
+    DEPARTMENT_NAME = colDef(
+      name = "EPIC DEP Name",
+      headerStyle = list(background = "white", fontWeight = "Bold", fontSize = "14px"),
+      minWidth = 250),
+    
+    DEP_RPT_GRP_ELEVEN = colDef(
+      name = "A28 vs. Non-A28",
+      headerStyle = list(background = "white", fontWeight = "Bold", fontSize = "14px"),
+      minWidth = 150),
+    
+    volume_last4mo = colDef(
+      name = "Last 4 Months"),
+    
+    volume_last12mo = colDef(
+      name = "Last 12 Months"),
+
+    `Activation Required` = colDef(
+      minWidth = 100,
+      headerStyle = list(background = "#d80b8c", color = "white", fontWeight = "Bold", fontSize = "14px"),
+      # Calculate the aggregate conversion rate as `(total-pending) / total`
+      aggregate = 'sum',
+      style = JS("function(rowInfo) {
+        var value = rowInfo.row['Activation Required']
+        if (value >= 1) {
+          var background = '#FFEB9C'
+          var color = 'black'
+        } else if (value < 1) {
+          var background = '#FFFFFF'
+          var color = '#FFFFFF'
+        } else {
+          var background = '#FFFFFF'
+          var color = '#FFFFFF'
+        }
+        return { background: background, color: color, fontFamily: 'calibri', fontWeight: 'bold'}
+      }"),
+      format = colFormat(separators = TRUE, digits = 0)
+    ),
+    
+    `No Action Required` = colDef(
+      minWidth = 100,
+      headerStyle = list(background = "#d80b8c", color = "white", fontWeight = "Bold", fontSize = "14px"),
+      # Calculate the aggregate conversion rate as `(total-pending) / total`
+      aggregate = 'sum',
+      format = colFormat(separators = TRUE, digits = 0)
+      # style = JS("function(rowInfo) {
+      #   var value = rowInfo.row['No Action Required']
+      #   if (value >= 1) {
+      #     var background = '#FFEB9C'
+      #     var color = 'black'
+      #   } else if (value < 1) {
+      #     var background = '#FFFFFF'
+      #     var color = '#FFFFFF'
+      #   } else {
+      #     var background = '#FFFFFF'
+      #     var color = '#FFFFFF'
+      #   }
+      #   return { background: background, color: color, fontFamily: 'calibri', fontWeight: 'bold'}
+      # }")
+    ),
+    
+    `Active` = colDef(
+      minWidth = 100,
+      headerStyle = list(background = "#d80b8c", color = "white", fontWeight = "Bold", fontSize = "14px"),
+      # Calculate the aggregate conversion rate as `(total-pending) / total`
+      aggregate = 'sum',
+      style = JS("function(rowInfo) {
+        var value = rowInfo.row['Active']
+        if (value >= 1) {
+          var background = '#C6EFCE'
+          var color = 'black'
+        } else if (value < 1) {
+          var background = '#FFFFFF'
+          var color = '#FFFFFF'
+        } else {
+          var background = '#FFFFFF'
+          var color = '#FFFFFF'
+        }
+        return { background: background, color: color, fontFamily: 'calibri', fontWeight: 'bold'}
+      }"),
+      format = colFormat(separators = TRUE, digits = 0)
+    ),
+    
+    `Deactivation Required` = colDef(
+      minWidth = 100,
+      headerStyle = list(background = "#d80b8c", color = "white", fontWeight = "Bold", fontSize = "14px"),
+      # Calculate the aggregate conversion rate as `(total-pending) / total`
+      aggregate = 'sum',
+      style = JS("function(rowInfo) {
+        var value = rowInfo.row['Deactivation Required']
+        if (value >= 1) {
+          var background = '#FFC7CE'
+          var color = 'black'
+        } else if (value < 1) {
+          var background = '#FFFFFF'
+          var color = '#FFFFFF'
+        } else {
+          var background = '#FFFFFF'
+          var color = '#FFFFFF'
+        }
+        return { background: background, color: color, fontFamily: 'calibri', fontWeight: 'bold'}
+      }"),
+      format = colFormat(separators = TRUE, digits = 0)
+    ),
+
+    PROV_ID = colDef(show =F),
+    sum_last4 = colDef(show =F),
+    all_gt0_last4 = colDef(show =F),
+    scheduling_status = colDef(show =F),
+    Service = colDef(show =F),
+    `IT NPI` = colDef(show =F),
+    `IT CLINICID` = colDef(show =F),
+    n = colDef(show =F),
+    pg_active = colDef(show =F),
+    volume_last4mo_Yn = colDef(show =F),
+    volume_last12mo_Yn = colDef(show =F)
+    
+
+  ) # Close Columns
+
+  ) # Close Reactable
+) # Close Taglist
+) # Close htmltools
+
+```
+
+
