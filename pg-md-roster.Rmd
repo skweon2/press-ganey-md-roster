@@ -614,7 +614,7 @@ prov_type_inc <- c(
                    # "Social Worker Assistant",
                    # "Social Worker Intern",
                    "Speech Language Pathologist",
-                   "Speech Therapist",
+                   "Speech Therapist"
                    # "Technician",
                    # "Therapist",
                    # "Unit Clerk"
