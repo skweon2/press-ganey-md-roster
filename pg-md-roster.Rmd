@@ -793,7 +793,7 @@ merged_dept <- dept_list %>%
   left_join(scheduling_data2_dept) %>%
   left_join(past_volume_dept) %>%
   left_join(pg_roster_processed %>%
-              dplyr::select(`IT CLINICID`, CLINIC_ID, pg_active) %>%
+              dplyr::select(`Epic Dept ID`, CLINIC_ID, pg_active) %>%
               distinct(),
             by = c("DEPARTMENT_ID" = "CLINIC_ID"),
             na_matches = "never")
@@ -1027,7 +1027,7 @@ reactable(
     sum_last4 = colDef(show =F),
     scheduling_status = colDef(show =F),
     Service = colDef(show =F),
-    `IT CLINICID` = colDef(show =F),
+    `Epic Dept ID` = colDef(show =F),
     n = colDef(show =F),
     pg_active = colDef(show =F),
     volume_last4mo_Yn = colDef(show =F),
@@ -1245,7 +1245,7 @@ reactable(
     scheduling_status = colDef(show =F),
     Service = colDef(show =F),
     `IT NPI` = colDef(show =F),
-    `IT CLINICID` = colDef(show =F),
+    `Epic Dept ID` = colDef(show =F),
     n = colDef(show =F),
     pg_active = colDef(show =F),
     volume_last4mo_Yn = colDef(show =F),
